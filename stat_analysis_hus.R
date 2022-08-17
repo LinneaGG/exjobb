@@ -1,11 +1,9 @@
-genePresence <- read.csv(file = 'gene_presence_absence_human.csv', row.names = 1)
+genePresence <- read.table(file = 'gene_presence_absence_human.Rtab', row.names = 1)
+colnames(genePresence) <- genePresence[1,]
+genePresence <- genePresence[-1, ]
 
-genePresence = subset(genePresence, select = -c(Non.unique.Gene.name,Annotation,No..isolates,No..sequences,Avg.sequences.per.isolate,Genome.Fragment,Order.within.Fragment,Accessory.Fragment,Accessory.Order.with.Fragment,QC,Min.group.size.nuc,Max.group.size.nuc,Avg.group.size.nuc) )
+#genePresence <- head(genePresence, - 5000)
 genePresence = t(genePresence)
-
-#Replace gene names with 1 or 0 for gene presence/absence 
-genePresence[genePresence != ""] <- 1
-genePresence[genePresence == ""] <- 0
 
 #Add column for HUS and region
 hus <- read.csv(file = 'traits_HUS.csv', row.names = 1)
