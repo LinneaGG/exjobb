@@ -4,8 +4,6 @@
 #SBATCH -n 8
 #SBATCH -t 30:00:00
 #SBATCH -J spades_SE
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user linnea.gauffingood.6719@student.uu.se
 
 module load bioinfo-tools
 module load spades
