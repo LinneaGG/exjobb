@@ -8,16 +8,18 @@
 module load bioinfo-tools
 module load quast
 
-assemblies=/path/to/filtered_assemblies/*.fasta
+path_to_filtered_assemblies="/path/to/filtered_assemblies/"
+path_to_quast_outdir="/path/to/quast_outdir"
+path_to_reference="path/to/ref"
 
-for a in $assemblies
+for a in ${path_to_filtered_assemblies}/*.fasta
 do
 	ID=$(basename $a _filtered.fasta)
 
-	if [[ ! -d /crex/proj/snic2021-23-717/private/quast_human/$ID ]]
+	if [[ ! -d ${path_to_quast_outdir}/$ID ]]
 	then
-		mkdir /crex/proj/snic2021-23-717/private/quast_human/$ID
+		mkdir ${path_to_quast_outdir}/$ID
 	fi
 
-	quast.py --threads 2 -r /home/linne/exjobb/snp_analysis/TW14359.fasta -o /crex/proj/snic2021-23-717/private/quast_human/$ID $a
+	quast.py --threads 2 -r ${path_to_reference}/TW14359.fasta -o ${path_to_quast_outdir}/$ID $a
 done
