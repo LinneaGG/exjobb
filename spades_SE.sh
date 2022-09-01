@@ -8,13 +8,16 @@
 module load bioinfo-tools
 module load spades
 
+path_to_trimmed_reads="/path/to/trimmed_reads"
+path_to_assembly_outdir="/path/to/assembly/outdir"
+
 if test -f "spades_script_human.sh"; then
         rm spades_script_human.sh
 fi
 
 regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 
-for i in /path/to/trimmed_reads/*.fastq.gz
+for i in ${path_to_trimmed_reads}/*.fastq.gz
 do
 
 	basename=$(basename $i)
@@ -23,12 +26,12 @@ do
 		basename=${BASH_REMATCH[*]}
 	fi
 
-        if [[ ! -d /path/to/assembly_outdir/$basename ]]
+        if [[ ! -d ${path_to_assembly_outdir}/$basename ]]
         then
-                mkdir /path/to/assembly_outdir/$basename #Create directory for each isolate in assembly outdir
+                mkdir ${path_to_assembly_outdir}/$basename #Create directory for each isolate in assembly outdir
         fi
 
-        echo "spades.py -s $i -m 50 --careful -o /path/to/assembly_outdir/$basename" > spades_script_human.sh
+        echo "spades.py -s $i -m 50 --careful -o ${path_to_assembly_outdir}/$basename" > spades_script_human.sh
         bash spades_script.sh
 
 done
