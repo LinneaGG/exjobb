@@ -15,6 +15,7 @@ file '*' optional true into subsampleChannel
 
 shell:
 '''
+regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 basename1=$(basename "!{i}" .fastq.gz)
 if [[ ${basename1} =~ $regex ]]
 then
@@ -82,6 +83,7 @@ publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want t
 
 shell:
 '''
+regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 basename1=$(basename "!{i}" .fastq.gz)
 if [[ ${basename1} =~ $regex ]]
 then
