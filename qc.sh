@@ -9,9 +9,12 @@ module load bioinfo-tools
 module load FastQC
 module load MultiQC
 
-for t in /path/to/reads/*.fastq.gz
+path_to_reads="/path/to/reads"
+path_to_qc_outdir="/path/to/qc/outdir"
+
+for t in ${path_to_reads}/*.fastq.gz
 do
-	fastqc $t -o /path/to/fastq_outdir
+	fastqc $t -o ${path_to_qc_outdir}
 done
 
-multiqc /path/to/fastq_outdir -o /path/to/multiqc_outdir
+multiqc ${path_to_qc_outdir} -o ${path_to_qc_outdir}
