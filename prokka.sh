@@ -8,8 +8,11 @@
 module load bioinfo-tools
 module load prokka
 
-for a in /path/to/filtered_assemblies/*.fasta
+path_to_filtered_assemblies="/path/to/filtered/assemblies"
+path_to_prokka_outdir="/path/to/prokka_outdir"
+
+for a in ${path_to_filtered_assemblies}/*.fasta
 do
 	id=$(basename $a _filtered.fasta)
-	prokka --outdir /path/to/prokka_outdir/${id} --force --prefix ${id} --locustag ${id} --genus Escherichia --strain coli --usegenus $a
+	prokka --outdir ${path_to_prokka_outdir}/${id} --force --prefix ${id} --locustag ${id} --genus Escherichia --strain coli --usegenus $a
 done
