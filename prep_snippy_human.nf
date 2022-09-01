@@ -1,3 +1,5 @@
+//Nextflow pipeline for trimming single-end reads + running snippy
+
 fileChannel=Channel.fromPath('/home/linne/exjobb/data/human/*.fastq.gz')
 
 process trimming { 
@@ -8,7 +10,7 @@ file i from fileChannel
 output:
 file '*' optional true into trimmedChannel
 
-publishDir '/crex/proj/snic2021-23-717/private/trimmed/human/', mode: 'link'
+publishDir '/crex/proj/snic2021-23-717/private/trimmed/human/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
 
 shell:
 '''
