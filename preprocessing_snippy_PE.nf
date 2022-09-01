@@ -16,13 +16,21 @@ file '*' optional true into subsampleChannel
 shell:
 '''
 basename1=$(basename "!{i}" .fastq.gz)
+if [[ ${basename1} =~ $regex ]]
+then
+	bn1=${BASH_REMATCH[*]}
+fi
 basename2=$(basename "!{j}" .fastq.gz)
+if [[ ${basename2} =~ $regex ]]
+then
+	bn2=${BASH_REMATCH[*]}
+fi
 
-if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Checking if the first 11 characters match in R1 & R2, may need to be changed depending on IDs
+if [[ ${bn1} == ${bn2} ]] #Checking if IDs of R1 & R2 are identical
 then
         lines=$(zcat !{i} | wc -l)
         seqs=$(expr $lines / 4)
-        if [ $seqs -gt 4000000 ] #Number depends on read length 
+        if [ $seqs -gt 4000000 ] #Number depends on read length, this is for 100 bp
         then
                 seqtk sample -s100 !{i} 4000000 > ${basename1}_subsample.fastq
                 seqtk sample -s100 !{j} 4000000 > ${basename2}_subsample.fastq
@@ -75,8 +83,16 @@ publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want t
 shell:
 '''
 basename1=$(basename "!{i}" .fastq.gz)
+if [[ ${basename1} =~ $regex ]]
+then
+	bn1=${BASH_REMATCH[*]}
+fi
 basename2=$(basename "!{j}" .fastq.gz)
-if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Again, checking if IDs of R1 & R2 match
+if [[ ${basename2} =~ $regex ]]
+then
+	bn2=${BASH_REMATCH[*]}
+fi
+if [[ ${bn1} == ${bn2} ]] 
 then
 	java -jar $TRIMMOMATIC_ROOT/trimmomatic-0.39.jar PE !{i} !{j} ${basename1}_paired.trimmed.fastq.gz ${basename1}_unpaired.trimmed.fastq.gz \
         ${basename2}_paired.trimmed.fastq.gz ${basename2}_unpaired.trimmed.fastq.gz \
@@ -105,15 +121,20 @@ shell:
 '''
 regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 basename1=$(basename "!{i}" .fastq.gz)
-basename2=$(basename "!{j}" .fastq.gz)
-if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Checking if IDs of R1 & R2 match
-
+if [[ ${basename1} =~ $regex ]]
 then
-        if [[ ${basename1} =~ $regex ]]
-        then
-                ID=${BASH_REMATCH[*]}
-                echo "${ID}\t!{i}\t!{j}" >> file.tab
-        fi
+	bn1=${BASH_REMATCH[*]}
+fi
+basename2=$(basename "!{j}" .fastq.gz)
+if [[ ${basename2} =~ $regex ]]
+then
+	bn2=${BASH_REMATCH[*]}
+fi
+
+if [[ ${bn1} == ${bn2} ]] 
+then
+	ID=${bn1}
+	echo "${ID}\t!{i}\t!{j}" >> file.tab
 fi
 
 '''
