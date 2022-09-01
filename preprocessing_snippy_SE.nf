@@ -1,6 +1,6 @@
 //Nextflow pipeline for trimming single-end reads + running snippy
 
-fileChannel=Channel.fromPath('/home/linne/exjobb/data/human/*.fastq.gz')
+fileChannel=Channel.fromPath('/path/to/reads/*.fastq.gz')
 
 process trimming { 
 
@@ -10,7 +10,7 @@ file i from fileChannel
 output:
 file '*' optional true into trimmedChannel
 
-publishDir '/crex/proj/snic2021-23-717/private/trimmed/human/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
+publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
 
 shell:
 '''
@@ -38,7 +38,7 @@ echo "${basename}\t!{i}" >> file.tab
 }
 
 fileChannel=outChannel.collectFile(name: 'snippyfile.tab', newLine: false)
-refChannel=Channel.fromPath('/home/linne/exjobb/snp_analysis/TW14359.fasta')
+refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta')
 
 process createSnippyScript {
 
@@ -67,7 +67,7 @@ file script from scriptChannel
 output:
 file '*' into snippy_out
 
-publishDir '/crex/proj/snic2021-23-717/private/snp_analysis/', mode: 'link'
+publishDir '/path/to/snippy_outdir/', mode: 'link'
 
 shell:
 '''
