@@ -12,12 +12,17 @@ assemblies=/crex/proj/snic2021-23-717/private/assembly/human/assemblies/*.fasta
 
 for a in $assemblies
 do
-	isolate=$(grep -oP '(?<=assemblies/).*?(?=.fasta)' <<< $a)
+	bn=$(basename $a)
+        regex="[^.]*" #To remove suffix
+        if [[ ${bn} =~ $regex ]]
+        then
+                ID=${BASH_REMATCH[*]}
+        fi
 
-	if [[ ! -d /crex/proj/snic2021-23-717/private/quast_human/$isolate ]]
+	if [[ ! -d /crex/proj/snic2021-23-717/private/quast_human/$ID ]]
 	then
-		mkdir /crex/proj/snic2021-23-717/private/quast_human/$isolate
+		mkdir /crex/proj/snic2021-23-717/private/quast_human/$ID
 	fi
 
-	quast.py --threads 2 -r /home/linne/exjobb/snp_analysis/TW14359.fasta -o /crex/proj/snic2021-23-717/private/quast_human/$isolate $a
+	quast.py --threads 2 -r /home/linne/exjobb/snp_analysis/TW14359.fasta -o /crex/proj/snic2021-23-717/private/quast_human/$ID $a
 done
