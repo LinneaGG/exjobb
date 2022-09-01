@@ -12,7 +12,7 @@ if test -f "spades_script_human.sh"; then
         rm spades_script_human.sh
 fi
 
-regex="[^_]*"
+regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 
 for i in /path/to/trimmed_reads/*.fastq.gz
 do
