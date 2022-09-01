@@ -9,9 +9,9 @@ module load bioinfo-tools
 module load FastQC
 module load MultiQC
 
-for t in /crex/proj/snic2021-23-717/private/trimmed/human/*.fastq.gz
+for t in /path/to/reads/*.fastq.gz
 do
-	fastqc $t -o /home/linne/exjobb/preprocessing/human_data/post-trimming
+	fastqc $t -o /path/to/fastq_outdir
 done
 
-multiqc /home/linne/exjobb/preprocessing/human_data/post-trimming -o /home/linne/exjobb/preprocessing/human_data/post-trimming
+multiqc /path/to/fastq_outdir -o /path/to/multiqc_outdir
