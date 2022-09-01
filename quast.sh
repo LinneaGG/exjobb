@@ -8,16 +8,11 @@
 module load bioinfo-tools
 module load quast
 
-assemblies=/crex/proj/snic2021-23-717/private/assembly/human/assemblies/*.fasta
+assemblies=/path/to/filtered_assemblies/*.fasta
 
 for a in $assemblies
 do
-	bn=$(basename $a)
-        regex="[^.]*" #To remove suffix
-        if [[ ${bn} =~ $regex ]]
-        then
-                ID=${BASH_REMATCH[*]}
-        fi
+	ID=$(basename $a _filtered.fasta)
 
 	if [[ ! -d /crex/proj/snic2021-23-717/private/quast_human/$ID ]]
 	then
