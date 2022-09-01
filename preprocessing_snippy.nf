@@ -1,8 +1,10 @@
+//Nextflow pipeline for subsampling & trimming paired reads + running Snippy
+
 //Divide paired reads
 to_be_subsampled1 = Channel.fromPath('/home/linne/exjobb/data/klad8/*_1.fastq.gz')
 to_be_subsampled2 = Channel.fromPath('/home/linne/exjobb/data/klad8/*_2.fastq.gz')
 
-process subsample {
+process subsample { //Subsampling reads with > 100x coverage, skip straight to trimming if subsampling is not needed
 
 input:
 each i from to_be_subsampled1
@@ -16,14 +18,11 @@ shell:
 basename1=$(basename "!{i}" .fastq.gz)
 basename2=$(basename "!{j}" .fastq.gz)
 
-lines=$(zcat !{i} | wc -l)
-seqs=$(expr $lines / 4)
-
-if [[ ${basename1:0:11} == ${basename2:0:11} ]]
+if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Checking if the first 11 characters match in R1 & R2, may need to be changed depending on IDs
 then
         lines=$(zcat !{i} | wc -l)
         seqs=$(expr $lines / 4)
-        if [ $seqs -gt 4000000 ] #Depends on read length 
+        if [ $seqs -gt 4000000 ] #Number depends on read length 
         then
                 seqtk sample -s100 !{i} 4000000 > ${basename1}_subsample.fastq
                 seqtk sample -s100 !{j} 4000000 > ${basename2}_subsample.fastq
@@ -35,7 +34,7 @@ fi
 '''
 }
 
-process zip {
+process zip { //Zip files again after subsampling
 
 input:
 each subsample from subsampleChannel.flatten()
@@ -55,7 +54,8 @@ zippedChannel.into{ zippedChannelCopy1; zippedChannelCopy2 }
 zippedChannel1=zippedChannelCopy1.filter( ~/.*_1.*/ )
 zippedChannel2=zippedChannelCopy2.filter( ~/.*_2.*/ )
 
-miseqChannel1=Channel.fromPath('/home/linne/exjobb/data/klad8/*_R1_*')
+//Add the reads that didn't need subsampling 
+miseqChannel1=Channel.fromPath('/home/linne/exjobb/data/klad8/*_R1_*') 
 miseqChannel2=Channel.fromPath('/home/linne/exjobb/data/klad8/*_R2_*')
 
 readsChannel1=zippedChannel1.mix(miseqChannel1)
@@ -70,13 +70,13 @@ each j from readsChannel2
 output:
 file '*_paired.trimmed.fastq.gz' optional true into trimmedChannel
 
-publishDir '/crex/proj/snic2021-23-717/private/trimmed/', mode: 'link'
+publishDir '/crex/proj/snic2021-23-717/private/trimmed/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
 
 shell:
 '''
 basename1=$(basename "!{i}" .fastq.gz)
 basename2=$(basename "!{j}" .fastq.gz)
-if [[ ${basename1:0:11} == ${basename2:0:11} ]]
+if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Again, checking if IDs of R1 & R2 match
 then
 	java -jar $TRIMMOMATIC_ROOT/trimmomatic-0.39.jar PE !{i} !{j} ${basename1}_paired.trimmed.fastq.gz ${basename1}_unpaired.trimmed.fastq.gz \
         ${basename2}_paired.trimmed.fastq.gz ${basename2}_unpaired.trimmed.fastq.gz \
@@ -106,7 +106,7 @@ shell:
 regex="[^_]*"
 basename1=$(basename "!{i}" .fastq.gz)
 basename2=$(basename "!{j}" .fastq.gz)
-if [[ ${basename1:0:11} == ${basename2:0:11} ]]
+if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Checking if IDs of R1 & R2 match
 
 then
         if [[ ${basename1} =~ $regex ]]
@@ -120,7 +120,7 @@ fi
 }
 
 fileChannel=outChannel.collectFile(name: 'snippyfile.tab', newLine: false)
-refChannel=Channel.fromPath('/home/linne/exjobb/snp_analysis/TW14359.fasta')
+refChannel=Channel.fromPath('/home/linne/exjobb/snp_analysis/TW14359.fasta') //Path to your reference
 
 process createSnippyScript {
 
