@@ -11,5 +11,5 @@ module load seqtk
 module load trimmomatic
 module load snippy
 
-nextflow preprocessing_snippy.nf #-resume
+nextflow preprocessing_snippy_PE.nf #-resume
 
