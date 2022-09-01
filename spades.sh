@@ -8,9 +8,10 @@
 module load bioinfo-tools
 module load spades
 
-regex="[^_]*"
-counter1=1
+regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 
+#Two for loops because I had paired files with two different naming schemes
+counter1=1
 for i in /crex/proj/snic2021-23-717/private/trimmed/klad8/*R1*_paired* 
 do
 	counter2=1 
