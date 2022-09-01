@@ -8,18 +8,21 @@
 module load bioinfo-tools
 module load spades
 
+regex="[^_]*"
 counter1=1
 
 for i in /crex/proj/snic2021-23-717/private/trimmed/klad8/*R1*_paired* 
 do
 	counter2=1 
-
 	for j in /crex/proj/snic2021-23-717/private/trimmed/klad8/*R2*_paired*
 	do 
-
 		if [[ $counter1 -eq $counter2 ]] 
 		then
-			basename=$(basename "$i" _L001_R1_001_paired.trimmed.fastq.gz)
+			basename=$(basename $i)
+			if [[ ${basename} =~ $regex ]]
+                        then
+                                basename=${BASH_REMATCH[*]}
+                        fi
 			
 			if [[ ! -d /crex/proj/snic2021-23-717/private/assembly/$basename ]]
 			then
@@ -28,33 +31,25 @@ do
 			
 			echo "spades.py -1 $i -2 $j -m 50 --careful -o /crex/proj/snic2021-23-717/private/assembly/$basename" > spades_script.sh
 			bash spades_script.sh
-			  
 		fi
-
 		counter2=$((counter2+1))
 	done 
-
 counter1=$((counter1+1))
-
 done 
 
 counter1=1
-
 for i in /crex/proj/snic2021-23-717/private/trimmed/klad8/*_1*_paired*
 do
         counter2=1
-
         for j in /crex/proj/snic2021-23-717/private/trimmed/klad8/*_2*_paired*
         do
-
                 if [[ $counter1 -eq $counter2 ]]
                 then
-			if [[ "$i" == *"subsample"* ]]
-        	        then
-                	        basename=$(basename $i _1_subsample_paired.trimmed.fastq.gz)
-                	else
-                        	basename=$(basename $i _1_paired.trimmed.fastq.gz)
-                	fi
+			basename=$(basename $i)
+                        if [[ ${basename} =~ $regex ]]
+                        then
+                                basename=${BASH_REMATCH[*]}
+                        fi
 
                         if [[ ! -d /crex/proj/snic2021-23-717/private/assembly/$basename ]]
                         then
@@ -63,13 +58,8 @@ do
 
                         echo "spades.py -1 $i -2 $j -m 50 --careful -o /crex/proj/snic2021-23-717/private/assembly/$basename" > spades_script.sh
                         bash spades_script.sh
-
                 fi
-
                 counter2=$((counter2+1))
         done
-
 counter1=$((counter1+1))
-
 done
-
