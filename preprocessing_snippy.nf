@@ -103,7 +103,7 @@ file '*' optional true into outChannel
 
 shell:
 '''
-regex="[^_]*"
+regex="[^_]*" #Keeps only the part before the first _ of the file name, may need to be changed depending on the IDs
 basename1=$(basename "!{i}" .fastq.gz)
 basename2=$(basename "!{j}" .fastq.gz)
 if [[ ${basename1:0:11} == ${basename2:0:11} ]] #Checking if IDs of R1 & R2 match
