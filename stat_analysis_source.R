@@ -55,6 +55,7 @@ coef <-coef2 [-1,] #remove intercept
 
 #Remove the 1 that is added to the gene names!
 coef$'rownames(coef)'<-gsub('1$',"",as.character(coef$'rownames(coef)'))
+coef = coef[order(-coef$s1),] #sort the coef list for easy viewing
 
 #Prepare for plotting
 c.df<-coef[order(-coef$s1),]
