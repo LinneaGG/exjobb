@@ -8,5 +8,8 @@
 module load bioinfo-tools
 module load Roary
 
-roary -v -f /crex/proj/snic2021-23-717/private/roary/ -i 90 /crex/proj/snic2021-23-717/private/prokka/*/*.gff 
+path_to_roary_outdir="/path/to/roary_outdir/" #make sure to end path with /
+path_to_prokka_outdir="/path/to/prokka"
+
+roary -v -f ${path_to_roary_outdir} -i 90 ${path_to_prokka_outdir}/*/*.gff 
 
