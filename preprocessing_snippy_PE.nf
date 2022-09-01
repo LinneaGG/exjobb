@@ -1,8 +1,8 @@
 //Nextflow pipeline for subsampling & trimming paired reads + running Snippy
 
 //Divide paired reads
-to_be_subsampled1 = Channel.fromPath('/home/linne/exjobb/data/klad8/*_1.fastq.gz')
-to_be_subsampled2 = Channel.fromPath('/home/linne/exjobb/data/klad8/*_2.fastq.gz')
+to_be_subsampled1 = Channel.fromPath('/path/to/reads/*_1.fastq.gz')
+to_be_subsampled2 = Channel.fromPath('/path/to/reads/*_2.fastq.gz')
 
 process subsample { //Subsampling reads with > 100x coverage, skip straight to trimming if subsampling is not needed
 
@@ -55,8 +55,8 @@ zippedChannel1=zippedChannelCopy1.filter( ~/.*_1.*/ )
 zippedChannel2=zippedChannelCopy2.filter( ~/.*_2.*/ )
 
 //Add the reads that didn't need subsampling 
-miseqChannel1=Channel.fromPath('/home/linne/exjobb/data/klad8/*_R1_*') 
-miseqChannel2=Channel.fromPath('/home/linne/exjobb/data/klad8/*_R2_*')
+miseqChannel1=Channel.fromPath('/path/to/reads/*_R1_*') 
+miseqChannel2=Channel.fromPath('/path/to/reads/*_R2_*')
 
 readsChannel1=zippedChannel1.mix(miseqChannel1)
 readsChannel2=zippedChannel2.mix(miseqChannel2)
@@ -70,7 +70,7 @@ each j from readsChannel2
 output:
 file '*_paired.trimmed.fastq.gz' optional true into trimmedChannel
 
-publishDir '/crex/proj/snic2021-23-717/private/trimmed/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
+publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
 
 shell:
 '''
@@ -120,7 +120,7 @@ fi
 }
 
 fileChannel=outChannel.collectFile(name: 'snippyfile.tab', newLine: false)
-refChannel=Channel.fromPath('/home/linne/exjobb/snp_analysis/TW14359.fasta') //Path to your reference
+refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta') //Path to your reference
 
 process createSnippyScript {
 
@@ -149,7 +149,7 @@ file script from scriptChannel
 output:
 file '*' into snippy_out
 
-publishDir '/crex/proj/snic2021-23-717/private/snp_analysis/', mode: 'link'
+publishDir '/path/to/snippy_outdir/', mode: 'link'
 
 shell:
 '''
