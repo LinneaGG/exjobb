@@ -1,5 +1,5 @@
 # Genomic comparison of Shiga toxin-producing _E. coli_ from ruminants and humans
-This project ... (abstract?)
+In this study, the aim is to identify any genomic differences between Swedish STEC isolates that have caused HUS and isolates that did not, as well as between isolates taken from animals and isolates taken from humans. 
 ## Running the analyses
 To run these analyses you will need:
 * Fastq files, paired- or single-end
