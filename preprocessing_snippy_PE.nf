@@ -1,8 +1,21 @@
 //Nextflow pipeline for subsampling & trimming paired reads + running Snippy
 
-//Divide paired reads
+/*
+I had two groups of reads with two different naming schemes, and only one of these groups had files which needed to be subsampled, 
+which is why some of the reads are only added to the pipeline after the subsampling. 
+
+Remember to change the paths to the outdirs for the trimmed reads and for snippy further down in the script!
+*/
+
+//Divide paired reads that may need to be subsampled
 to_be_subsampled1 = Channel.fromPath('/path/to/reads/*_1.fastq.gz')
 to_be_subsampled2 = Channel.fromPath('/path/to/reads/*_2.fastq.gz')
+
+//The reads that don't need to be subsampled
+miseqChannel1=Channel.fromPath('/path/to/reads/*_R1_*') 
+miseqChannel2=Channel.fromPath('/path/to/reads/*_R2_*')
+
+refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta') //Path to your reference
 
 process subsample { //Subsampling reads with > 100x coverage, skip straight to trimming if subsampling is not needed
 
@@ -63,10 +76,7 @@ zippedChannel.into{ zippedChannelCopy1; zippedChannelCopy2 }
 zippedChannel1=zippedChannelCopy1.filter( ~/.*_1.*/ )
 zippedChannel2=zippedChannelCopy2.filter( ~/.*_2.*/ )
 
-//Add the reads that didn't need subsampling 
-miseqChannel1=Channel.fromPath('/path/to/reads/*_R1_*') 
-miseqChannel2=Channel.fromPath('/path/to/reads/*_R2_*')
-
+//Add the reads that were not subsampled to the same channel as the subsampled reads
 readsChannel1=zippedChannel1.mix(miseqChannel1)
 readsChannel2=zippedChannel2.mix(miseqChannel2)
 
@@ -143,7 +153,6 @@ fi
 }
 
 fileChannel=outChannel.collectFile(name: 'snippyfile.tab', newLine: false)
-refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta') //Path to your reference
 
 process createSnippyScript {
 
