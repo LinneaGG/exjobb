@@ -2,6 +2,8 @@
 
 fileChannel=Channel.fromPath('/path/to/reads/*.fastq.gz')
 
+refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta')
+
 trimmed_outdir = '/path/to/trimmed_outdir/'
 snippy_outdir = '/path/to/snippy_outdir/'
 
@@ -46,7 +48,6 @@ echo "${basename}\t!{i}" >> file.tab
 }
 
 fileChannel=outChannel.collectFile(name: 'snippyfile.tab', newLine: false)
-refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta')
 
 process createSnippyScript {
 
