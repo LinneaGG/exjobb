@@ -1,5 +1,7 @@
 //Nextflow pipeline for trimming single-end reads + running snippy
 
+//Add process to subsample if needed
+
 fileChannel=Channel.fromPath('/path/to/reads/*.fastq.gz')
 
 refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta')
