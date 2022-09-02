@@ -15,7 +15,7 @@ O26:H11 -  CP058682.2
 O121:H19 - CP022407.1
 
 
-Note that some of the scripts (`preprocessing_snippy.nf` and `spades.sh`) use a regex to keep only the part before the first "_" in the file name as the ID of the sample, so depending on how your files are named this may need to be edited. 
+Note that some of the scripts (`preprocessing_snippy` and `spades`) use a regex to keep only the part before the first "_" in the file name as the ID of the sample, so depending on how your files are named this may need to be edited. 
 
 ### Pre-processing & phylogenetic analysis
 1. Run `qc.sh` to quality check to see if the data need to be subsampled and what adapters are present and edit the `preprocessing_snippy.nf` script accordingly if needed
