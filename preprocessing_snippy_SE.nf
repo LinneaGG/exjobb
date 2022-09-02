@@ -2,6 +2,10 @@
 
 fileChannel=Channel.fromPath('/path/to/reads/*.fastq.gz')
 
+trimmed_outdir = '/path/to/trimmed_outdir/'
+snippy_outdir = '/path/to/snippy_outdir/'
+
+
 process trimming { 
 
 input:
@@ -10,7 +14,11 @@ file i from fileChannel
 output:
 file '*' optional true into trimmedChannel
 
-publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
+//Remove if you don't want to save the trimmed reads in a directory
+publishDir (
+path: trimmed_outdir,
+mode: 'link',
+) 
 
 shell:
 '''
@@ -67,7 +75,10 @@ file script from scriptChannel
 output:
 file '*' into snippy_out
 
-publishDir '/path/to/snippy_outdir/', mode: 'link'
+publishDir (
+path: snippy_outdir,
+mode: 'link',
+) 
 
 shell:
 '''
