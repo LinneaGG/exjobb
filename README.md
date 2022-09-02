@@ -19,7 +19,7 @@ Note that some of the scripts (`preprocessing_snippy` and `spades`) use a regex 
 
 ### Pre-processing & phylogenetic analysis
 1. Run `qc.sh` to quality check to see if the data need to be subsampled and what adapters are present and edit the `preprocessing_snippy` Nextflow script accordingly if needed
-2. Run `preprocessing_snippy_PE.sh` or `preprocessing_snippy_SE.sh` depending on if you have paired- or single-end files. If you only want to trim without running Snippy just remove the last processes from the script. 
+2. Run `preprocessing_snippy_PE.sh` or `preprocessing_snippy_SE.sh` depending on if you have paired- or single-end files. If you only want to trim without running Snippy just remove the last processes from the Nextflow script. 
 3. Run `grapetree_nj.sh` to generate phylogenetic tree from your alignment
 4. Visualise tree using Grapetree: https://achtman-lab.github.io/GrapeTree/MSTree_holder.html 
 ### Pan-genome analysis
