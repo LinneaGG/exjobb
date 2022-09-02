@@ -3,8 +3,6 @@
 /*
 I had two groups of reads with two different naming schemes, and only one of these groups had files which needed to be subsampled, 
 which is why some of the reads are only added to the pipeline after the subsampling. 
-
-Remember to change the paths to the outdirs for the trimmed reads and for snippy further down in the script!
 */
 
 //Divide paired reads that may need to be subsampled
@@ -16,6 +14,10 @@ miseqChannel1=Channel.fromPath('/path/to/reads/*_R1_*')
 miseqChannel2=Channel.fromPath('/path/to/reads/*_R2_*')
 
 refChannel=Channel.fromPath('/path/to/reference/TW14359.fasta') //Path to your reference
+
+trimmed_outdir = '/path/to/trimmed_outdir/'
+snippy_outdir = '/path/to/snippy_outdir/'
+
 
 process subsample { //Subsampling reads with > 100x coverage, skip straight to trimming if subsampling is not needed
 
@@ -89,7 +91,11 @@ each j from readsChannel2
 output:
 file '*_paired.trimmed.fastq.gz' optional true into trimmedChannel
 
-publishDir '/path/to/trimmed_outdir/', mode: 'link' //Remove if you don't want to save the trimmed reads in a directory
+//Remove if you don't want to save the trimmed reads in a directory
+publishDir (
+path: trimmed_outdir,
+mode: 'link',
+) 
 
 shell:
 '''
@@ -181,7 +187,10 @@ file script from scriptChannel
 output:
 file '*' into snippy_out
 
-publishDir '/path/to/snippy_outdir/', mode: 'link'
+publishDir (
+path: snippy_outdir,
+mode: 'link',
+) 
 
 shell:
 '''
